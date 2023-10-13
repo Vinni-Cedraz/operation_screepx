@@ -1,3 +1,6 @@
+import { roleHarvester } from "roles/harvester";
+import { roleUpgrader } from "roles/upgrader";
+import { roleBuilder } from "roles/builder";
 import { ErrorMapper } from "utils/ErrorMapper";
 
 declare global {
@@ -18,6 +21,8 @@ declare global {
   interface CreepMemory {
     role: string;
     room: string;
+    building: boolean;
+    upgrading: boolean;
     working: boolean;
   }
 
@@ -40,4 +45,18 @@ export const loop = ErrorMapper.wrapLoop(() => {
       delete Memory.creeps[name];
     }
   }
+
+  for(var name in Game.creeps) {
+        var creep = Game.creeps[name];
+        if(creep.memory.role == 'harvester') {
+            roleHarvester.run(creep);
+        }
+        if(creep.memory.role == 'upgrader') {
+            roleUpgrader.run(creep);
+        }
+        if(creep.memory.role == 'builder') {
+            roleBuilder.run(creep);
+        }
+    }
+
 });
